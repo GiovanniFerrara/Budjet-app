@@ -10,14 +10,13 @@ class ExpenseForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        description: "",
-        createdAt: moment(),
-        amount: 0,
-        note: "",
+        description: props.expense?  props.expense.description : "",
+        createdAt: props.expense?  moment(props.expense.createdAt) : moment(),
+        amount: props.expense?  (props.expense.amount/100).toString() : 0,
+        note: props.expense? props.expense.note : "",
         calendarFocus: false,
         error: "",
     }
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +44,7 @@ class ExpenseForm extends Component {
   onFocusChange = ({focused}) => {
     this.setState(()=> ({calendarFocus: focused}))
   }
-  handleInputChange(e){
+  handleInputChange = (e)=>{
     const input = e.target.name;
     const value = e.target.value;
     this.setState(()=>({
@@ -63,6 +62,8 @@ class ExpenseForm extends Component {
             autoFocus
             onChange={this.handleInputChange}
             noValidate = {true}
+            value = {this.state.description}
+            
           />
           <SingleDatePicker
             date={this.state.createdAt}
@@ -77,11 +78,13 @@ class ExpenseForm extends Component {
             name="amount"
             placeholder="Amount"
             onChange={this.handleInputChange}
+            value = {this.state.amount}
           />
           <textarea type="text"
             name="note"
             placeholder="Notes"
             onChange={this.handleInputChange}
+            value = {this.state.note}
           />
           <button> Add Expense </button>
         </form>
