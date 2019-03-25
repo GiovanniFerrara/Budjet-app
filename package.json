@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "serve": "live-server public/",
-    "build": "webpack",
+    "build:dev": "webpack",
+    "build:prod": "webpack -p --env production",
     "develop": "webpack-dev-server",
     "test": "jest --config=jest.config.json"
   },
@@ -22,6 +23,7 @@
     "enzyme": "3.0.0",
     "enzyme-adapter-react-16": "1.0.0",
     "enzyme-to-json": "3.0.1",
+    "firebase": "^5.9.1",
     "jest": "20.0.4",
     "live-server": "^1.2.0",
     "moment": "2.18.1",
@@ -37,6 +39,8 @@
     "react-router-dom": "4.1.2",
     "react-test-renderer": "16.0.0",
     "redux": "3.7.2",
+    "redux-mock-store": "^1.5.3",
+    "redux-thunk": "^2.3.0",
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",
     "uuid": "3.1.0",

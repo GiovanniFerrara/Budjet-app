@@ -3,14 +3,14 @@ import { shallow } from 'enzyme';
 import { AddExpensePage } from '../../components/AddExpensePage';
 import expenses from '../fixtures/expenses';
 
-let hystory, addExpense, wrapper;
+let hystory, startAddExpense, wrapper;
 
 beforeEach(() => {
   hystory = {
     push: jest.fn(),
   }
-  addExpense = jest.fn();
-  wrapper = shallow(<AddExpensePage history={hystory} addExpense={addExpense} />)
+  startAddExpense = jest.fn();
+  wrapper = shallow(<AddExpensePage history={hystory} startAddExpense={startAddExpense} />)
 })
 
 test('should render AddExpensePage', () => {
@@ -20,5 +20,5 @@ test('should render AddExpensePage', () => {
 test('should handle onSubmit', () => {
   wrapper.find('ExpenseForm').prop('onSubmit')(expenses[0])
   expect(hystory.push).toHaveBeenLastCalledWith('/')
-  expect(addExpense).toHaveBeenLastCalledWith(expenses[0])
+  expect(startAddExpense).toHaveBeenLastCalledWith(expenses[0])
 })
