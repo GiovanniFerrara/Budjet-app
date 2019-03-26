@@ -6,9 +6,6 @@ const ExpenseDashboardPage = () => (
   <div>
     <ExpenseList />
     <ExpenseListFilter />
-    <button onClick={() => {
-      console.log(process.env.FIREBASE_API_KEY)
-    }}>click</button>
   </div>
 );
 
