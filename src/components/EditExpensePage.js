@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import ExpenseForm from './ExpenseForm';
 import { connect } from 'react-redux';
-import { editExpense, removeExpense } from '../actions/expenses'
+import { editExpense, removeExpense, startRemoveExpenses } from '../actions/expenses'
 
-export class EditExpensePage extends PureComponent {
+export class EditExpensePage extends Component {
 
   onSubmit = (newExpense) => {
     this.props.editExpense(this.props.expense.id, newExpense)
@@ -38,7 +38,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProp = (dispatch) => ({
   editExpense: (id, newExpense) => dispatch(editExpense(id, newExpense)),
-  removeExpense: (expense) => dispatch(removeExpense(expense)),
+  removeExpense: (expense) => dispatch(startRemoveExpenses(expense)),
 }
 )
 export default connect(mapStateToProps, mapDispatchToProp)(EditExpensePage)

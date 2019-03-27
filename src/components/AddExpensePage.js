@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import ExpenseForm from './ExpenseForm';
 import { connect } from 'react-redux';
 import { startAddExpense } from '../actions/expenses'
 
-export class AddExpensePage extends PureComponent {
+export class AddExpensePage extends Component {
 
   onSubmit = (expense) => {
     this.props.startAddExpense(expense)

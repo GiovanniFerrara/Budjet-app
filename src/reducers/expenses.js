@@ -25,7 +25,7 @@ export default (state = expensesReducerDefaultState, action) => {
 };
 
 const mergeArrayToState = (state, expenses) => {
-  return [...state, ...expenses]
+  return [...expenses]
 }
 
 const addExpense = (state, expenseObj) => {

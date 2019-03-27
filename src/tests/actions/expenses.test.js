@@ -1,4 +1,13 @@
-import { startAddExpense, addExpense, editExpense, removeExpense, fetchExpenses, startFetchExpenses } from '../../actions/expenses';
+import {
+  startAddExpense,
+  addExpense,
+  editExpense,
+  removeExpense,
+  fetchExpenses,
+  startFetchExpenses,
+  startRemoveExpenses,
+
+} from '../../actions/expenses';
 import configMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import db from '../../firebase/firebase'
@@ -29,6 +38,26 @@ test("should setup remove expense action object", () => {
     })
 })
 
+test('should remove expenses from the db and call removeExpese({id})', (done) => {
+  const store = createMockStore({});
+  const id = expenses[0].id;
+  store.dispatch(startRemoveExpenses({ id: expenses[0].id }))
+    .then(() => {
+      const actions = store.getActions()
+      const removeExpenseAction = actions[0];
+      expect(removeExpenseAction).toEqual({
+        type: 'REMOVE_EXPENSE',
+        id
+      })
+      return db.ref(`expenses/${id}`).once('value')
+    })
+    .then(snapshot => {
+      expect(snapshot.val()).toBeFalsy()
+      done()
+    })
+
+})
+
 test("should setup edit expense action object", () => {
   const updateObj = {
     description: "heyman",
@@ -40,6 +69,10 @@ test("should setup edit expense action object", () => {
     id: 55,
     updates: updateObj
   })
+})
+
+test('should update data in DB and dispatch editExpense(id,update)', () => {
+
 })
 
 test("should setup action object with custom values", () => {
