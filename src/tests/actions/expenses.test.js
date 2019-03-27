@@ -3,9 +3,10 @@ import {
   addExpense,
   editExpense,
   removeExpense,
-  fetchExpenses,
+  setExpenses,
   startFetchExpenses,
   startRemoveExpenses,
+  startEditExpense
 
 } from '../../actions/expenses';
 import configMockStore from 'redux-mock-store';
@@ -41,7 +42,7 @@ test("should setup remove expense action object", () => {
 test('should remove expenses from the db and call removeExpese({id})', (done) => {
   const store = createMockStore({});
   const id = expenses[0].id;
-  store.dispatch(startRemoveExpenses({ id: expenses[0].id }))
+  store.dispatch(startRemoveExpenses({ id }))
     .then(() => {
       const actions = store.getActions()
       const removeExpenseAction = actions[0];
@@ -71,8 +72,28 @@ test("should setup edit expense action object", () => {
   })
 })
 
-test('should update data in DB and dispatch editExpense(id,update)', () => {
-
+test('should update data in DB and dispatch editExpense(id,update)', (done) => {
+  const id = expenses[2].id;
+  const updateObj = {
+    note: "hey",
+    createdAt: 0,
+    description: 'this is the update',
+    amount: 1212
+  }
+  const store = createMockStore({});
+  store.dispatch(startEditExpense(id, updateObj)).then(() => {
+    const action = store.getActions()[0];
+    expect(action).toEqual({
+      type: "EDIT_EXPENSE",
+      id,
+      updates: updateObj
+    })
+    return db.ref(`expenses/${id}`).once('value')
+  })
+    .then(snapshot => {
+      expect(snapshot.val()).toEqual(updateObj)
+      done()
+    })
 })
 
 test("should setup action object with custom values", () => {
@@ -153,15 +174,15 @@ test('should dispatch startAddExpense and and save the data in the DB, with defa
     })
 })
 
-test('should setup fetchExpenses action ', () => {
-  const action = fetchExpenses(expenses);
+test('should setup setExpenses action ', () => {
+  const action = setExpenses(expenses);
   expect(action).toEqual({
     type: 'FETCH_EXPENSES',
     expenses
   })
 })
 
-test('should dispatch async fetchExpenses', (done) => {
+test('should setExpenses in the store fetching from the DB', (done) => {
   const store = createMockStore({});
   store.dispatch(startFetchExpenses())
     .then(() => {
@@ -169,10 +190,27 @@ test('should dispatch async fetchExpenses', (done) => {
       return action
     })
     .then((action) => {
-      const expensesIntoAction = action.expenses;
+      const expensesFromActionObj = action.expenses;
       const actionType = action.type;
       expect(actionType).toBe('FETCH_EXPENSES');
-      expect(expensesIntoAction).toEqual(expenses);
-      done()
+      expect(expensesFromActionObj).toEqual(expenses);
+      db.ref('expenses').once('value')
+        .then((snapshot) => {
+          const expensesDocs = snapshot.val()
+          expect(mapExpensesToArray(expensesDocs)).toEqual(expenses)
+          done()
+        })
     })
 })
+
+
+const mapExpensesToArray = (expensesDoc) => {
+  const expenses = [];
+  for (let key in expensesDoc) {
+    expenses.push({
+      ...expensesDoc[key],
+      id: key
+    })
+  }
+  return [...expenses]
+}

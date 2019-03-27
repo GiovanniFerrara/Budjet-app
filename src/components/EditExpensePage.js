@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ExpenseForm from './ExpenseForm';
 import { connect } from 'react-redux';
-import { editExpense, removeExpense, startRemoveExpenses } from '../actions/expenses'
+import { startEditExpense, startRemoveExpenses } from '../actions/expenses'
 
 export class EditExpensePage extends Component {
 
@@ -30,15 +30,26 @@ export class EditExpensePage extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  expense: state.expenses.find((expense) => {
-    return expense.id = props.match.params.id
+const mapStateToProps = (state, props) => {
+  const idFromUrl = props.match.params.id;
+  return ({
+    expense: findExpenseById(idFromUrl, state.expenses)
   })
-})
+}
 
 const mapDispatchToProp = (dispatch) => ({
-  editExpense: (id, newExpense) => dispatch(editExpense(id, newExpense)),
+  editExpense: (id, newExpense) => dispatch(startEditExpense(id, newExpense)),
   removeExpense: (expense) => dispatch(startRemoveExpenses(expense)),
 }
 )
 export default connect(mapStateToProps, mapDispatchToProp)(EditExpensePage)
+
+const findExpenseById = (id, expenses) => {
+  let expense;
+  expenses.forEach((item) => {
+    if (item.id === id) {
+      expense = item;
+    }
+  })
+  return expense
+}

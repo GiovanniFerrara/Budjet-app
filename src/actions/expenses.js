@@ -1,4 +1,5 @@
 import db from '../firebase/firebase';
+import moment from 'moment';
 
 // ADD_EXPENSE
 export const addExpense = expense => ({
@@ -6,7 +7,7 @@ export const addExpense = expense => ({
   expense
 });
 
-export const fetchExpenses = (expenses) => ({
+export const setExpenses = (expenses) => ({
   type: 'FETCH_EXPENSES',
   expenses
 })
@@ -16,9 +17,17 @@ export const startFetchExpenses = () => {
     return db.ref('expenses')
       .once('value')
       .then(snapshot => {
-        const expenses = snapshot.val();
-        const expensesArray = mapExpensesToArray(expenses)
-        dispatch(fetchExpenses(expensesArray))
+        const expensesArray = []
+        snapshot.forEach((childSnapshot) => {
+          expensesArray.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          })
+        })
+        return expensesArray
+      })
+      .then((expensesArray) => {
+        dispatch(setExpenses(expensesArray))
       })
       .catch(e => console.log(e))
   }
@@ -68,6 +77,19 @@ export const editExpense = (id, updates) => ({
   updates
 });
 
+export const startEditExpense = (id, updates = {}) => {
+  const {
+    description = "",
+    amount = 0,
+    note = "",
+    createdAt = 0,
+  } = updates
+  return (dispatch) => {
+    return db.ref(`expenses/${id}`).set(updates).then(() => {
+      dispatch(editExpense(id, updates))
+    })
+  }
+}
 
 // ======== UTILS FUNCTIONS =========
 const addId = (expense, id) => ({
@@ -75,7 +97,7 @@ const addId = (expense, id) => ({
   id
 })
 
-const mapExpensesToArray = (expensesDoc) => {
+export const mapExpensesToArray = (expensesDoc) => {
   const expenses = [];
   for (let key in expensesDoc) {
     expenses.push({

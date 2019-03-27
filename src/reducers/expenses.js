@@ -17,15 +17,16 @@ export default (state = expensesReducerDefaultState, action) => {
       return editExpenseById(state, action.id, action.updates)
 
     case 'FETCH_EXPENSES':
-      return mergeArrayToState(state, action.expenses)
+      return setExpenses(action.expenses)
 
     default:
       return state;
   }
 };
 
-const mergeArrayToState = (state, expenses) => {
-  return [...expenses]
+const setExpenses = (expenses) => {
+  console.log('from reducer: ', expenses)
+  return expenses
 }
 
 const addExpense = (state, expenseObj) => {

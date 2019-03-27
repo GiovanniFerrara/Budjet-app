@@ -5,15 +5,12 @@ import getVisibleExpenses from '../selectors/expenses';
 import { startFetchExpenses } from '../actions/expenses'
 
 export class ExpenseList extends Component {
-  componentDidMount() {
-    this.props.fetchExpenses()
-  }
   render() {
     return (
       <div>
         <h1>Expense List</h1>
         {this.props.expenses.length === 0 ?
-          <p>Loading...</p> :
+          <p>No expenses found</p> :
           this.props.expenses.map((item) => (
             <ExpenseListItem {...item} key={item.id} />
           ))}
@@ -21,14 +18,9 @@ export class ExpenseList extends Component {
     )
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-  fetchExpenses: () => {
-    dispatch(startFetchExpenses())
-  }
-})
 
 const mapStateToProps = (state) => {
   return { expenses: getVisibleExpenses(state.expenses, state.filters) }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExpenseList);
+export default connect(mapStateToProps)(ExpenseList);
