@@ -24,7 +24,7 @@ test('should not remove expenses if id not found', () => {
   expect(state).toEqual(expenses);
 });
 
-test("should add a new expense",()=>{
+test("should add a new expense", () => {
   const action = {
     type: "ADD_EXPENSE",
     expense: {
@@ -37,7 +37,7 @@ test("should add a new expense",()=>{
   }
   const newState = expensesReducer(expenses, action);
   expect(newState)
-    .toEqual([...expenses,action.expense])
+    .toEqual([...expenses, action.expense])
 })
 
 
@@ -67,3 +67,11 @@ test('should not edit an expense if id not found', () => {
   expect(state).toEqual(expenses);
 });
 
+test('should set fetched expeses', () => {
+  const action = {
+    type: 'FETCH_EXPENSES',
+    expenses: [expenses[1]]
+  }
+  const state = expensesReducer([], action);
+  expect(state).toEqual([expenses[1]])
+})

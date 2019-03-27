@@ -1,4 +1,3 @@
-import uuid from 'uuid';
 import db from '../firebase/firebase';
 
 // ADD_EXPENSE
@@ -7,6 +6,24 @@ export const addExpense = expense => ({
   expense
 });
 
+export const fetchExpenses = (expenses) => ({
+  type: 'FETCH_EXPENSES',
+  expenses
+})
+
+export const startFetchExpenses = () => {
+  return (dispatch) => {
+    return db.ref('expenses')
+      .once('value')
+      .then(snapshot => {
+        const expenses = snapshot.val();
+        const expensesArray = mapExpensesToArray(expenses)
+        dispatch(fetchExpenses(expensesArray))
+      })
+      .catch(e => console.log(e))
+  }
+}
+// ADD ASYNCLY IN DB AND STORE
 export const startAddExpense = (expenseObj = {}) => {
   return (dispatch) => {
     const {
@@ -19,10 +36,8 @@ export const startAddExpense = (expenseObj = {}) => {
     return db.ref('expenses')
       .push(expense)
       .then((ref) => {
-        dispatch(addExpense({
-          ...expense,
-          id: ref.key
-        }))
+        const expenseWithId = addId(expense, ref.key);
+        dispatch(addExpense(expenseWithId))
       })
       .catch(e => console.log(e))
   }
@@ -41,3 +56,21 @@ export const editExpense = (id, updates) => ({
   id,
   updates
 });
+
+
+// ======== UTILS FUNCTIONS =========
+const addId = (expense, id) => ({
+  ...expense,
+  id
+})
+
+const mapExpensesToArray = (expensesDoc) => {
+  const expenses = [];
+  for (let key in expensesDoc) {
+    expenses.push({
+      ...expensesDoc[key],
+      id: key
+    })
+  }
+  return [...expenses]
+}

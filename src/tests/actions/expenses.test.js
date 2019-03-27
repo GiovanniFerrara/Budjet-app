@@ -1,8 +1,22 @@
-import { startAddExpense, addExpense, editExpense, removeExpense } from '../../actions/expenses';
+import { startAddExpense, addExpense, editExpense, removeExpense, fetchExpenses, startFetchExpenses } from '../../actions/expenses';
 import configMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import db from '../../firebase/firebase'
 const createMockStore = configMockStore([thunk]);
+import expenses from '../fixtures/expenses'
+
+beforeEach((done) => {
+  const expensesData = {};
+  expenses.forEach(({ id, description, note, createdAt, amount }) => {
+    expensesData[id] = { description, note, createdAt, amount }
+  })
+  db.ref('expenses')
+    .set(expensesData)
+    .then(() => {
+      done()
+    })
+
+})
 
 test("should setup remove expense action object", () => {
   const action = removeExpense({ id: 55 });
@@ -47,14 +61,13 @@ test("should setup action object with custom values", () => {
 })
 
 test("should add an expense in the DB and and add it to the mock store", (done) => {
-  const store = createMockStore({})
+  const store = createMockStore({});
   const expenseData = {
     description: "barca",
     note: "It's cool",
     amount: 3000,
     createdAt: 10000
-  }
-
+  };
   store.dispatch(startAddExpense(expenseData))
     .then(() => {
       const actions = store.getActions()
@@ -107,18 +120,26 @@ test('should dispatch startAddExpense and and save the data in the DB, with defa
     })
 })
 
-// test("should setup action object with default values", () => {
-//   const expense = {}
-//   const action = addExpense(expense);
-//   expect(action)
-//     .toEqual({
-//       type: "ADD_EXPENSE",
-//       expense: {
-//         id: expect.any(String),
-//         description: "",
-//         note: "",
-//         amount: 0,
-//         createdAt: 0,
-//       }
-//     })
-// })
+test('should setup fetchExpenses action ', () => {
+  const action = fetchExpenses(expenses);
+  expect(action).toEqual({
+    type: 'FETCH_EXPENSES',
+    expenses
+  })
+})
+
+test('should dispatch async fetchExpenses', (done) => {
+  const store = createMockStore({});
+  store.dispatch(startFetchExpenses())
+    .then(() => {
+      const action = store.getActions()[0];
+      return action
+    })
+    .then((action) => {
+      const expensesIntoAction = action.expenses;
+      const actionType = action.type;
+      expect(actionType).toBe('FETCH_EXPENSES');
+      expect(expensesIntoAction).toEqual(expenses);
+      done()
+    })
+})
