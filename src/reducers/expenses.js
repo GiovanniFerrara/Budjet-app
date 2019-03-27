@@ -25,7 +25,6 @@ export default (state = expensesReducerDefaultState, action) => {
 };
 
 const setExpenses = (expenses) => {
-  console.log('from reducer: ', expenses)
   return expenses
 }
 

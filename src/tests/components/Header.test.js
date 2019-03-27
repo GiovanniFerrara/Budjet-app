@@ -1,10 +1,15 @@
 import React from 'react';
-import Header from '../../components/Header';
+import { Header } from '../../components/Header';
 import { shallow } from 'enzyme';
 import toJson from "enzyme-to-json";
 
+let wrapper, logoutSpy;
+beforeEach(() => {
+  logoutSpy = jest.fn();
+  wrapper = shallow(<Header logout={logoutSpy} />);
+})
+
 test('should render Header correctly', () => {
-  const wrapper = shallow(<Header />);
   expect(
     wrapper.find("h1").length
   ).toBe(1)
@@ -12,9 +17,10 @@ test('should render Header correctly', () => {
   expect(
     wrapper.find("h1").text()
   ).toBe("Expensify")
+})
 
-  expect(toJson(wrapper))
-    .toMatchSnapshot();
+test('should call logout on button click', () => {
 
-  // expect(output).toMatchSnapshot();
+  wrapper.find('button').simulate('click')
+  expect(logoutSpy).toHaveBeenCalled()
 })
