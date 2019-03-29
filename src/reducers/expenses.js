@@ -1,5 +1,3 @@
-import { editExpense } from "../actions/expenses";
-
 // Expenses Reducer
 
 const expensesReducerDefaultState = [];
