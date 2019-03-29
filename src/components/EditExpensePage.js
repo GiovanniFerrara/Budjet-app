@@ -7,11 +7,11 @@ export class EditExpensePage extends Component {
 
   onSubmit = (newExpense) => {
     this.props.editExpense(this.props.expense.id, newExpense)
-    this.props.history.push("/")
+    this.props.history.push("/dashboard")
   }
   onClickRemove = () => {
     this.props.removeExpense({ id: this.props.expense.id })
-    this.props.history.push("/")
+    this.props.history.push("/dashboard")
 
   }
   render() {

@@ -7,7 +7,7 @@ export class AddExpensePage extends Component {
 
   onSubmit = (expense) => {
     this.props.startAddExpense(expense)
-    this.props.history.push("/")
+    this.props.history.push("/dashboard")
   }
   render() {
     return (
