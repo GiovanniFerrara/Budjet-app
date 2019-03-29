@@ -7,20 +7,24 @@ import {
   startFetchExpenses,
   startRemoveExpenses,
   startEditExpense
-
 } from '../../actions/expenses';
 import configMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import db from '../../firebase/firebase'
-const createMockStore = configMockStore([thunk]);
 import expenses from '../fixtures/expenses'
 
+// Define global variables
+const createMockStore = configMockStore([thunk]);
+const userId = 'ifuckinlovepastacumatarocco';
+const defaultAuthState = { auth: { id: userId } };
+
+// Define variables to clean up before each test suite
 beforeEach((done) => {
   const expensesData = {};
   expenses.forEach(({ id, description, note, createdAt, amount }) => {
     expensesData[id] = { description, note, createdAt, amount }
   })
-  db.ref('expenses')
+  db.ref(`users/${userId}/expenses`)
     .set(expensesData)
     .then(() => {
       done()
@@ -28,6 +32,7 @@ beforeEach((done) => {
 
 })
 
+// Start testing here
 test("should setup remove expense action object", () => {
   const action = removeExpense({ id: 55 });
   expect(typeof action === "object")
@@ -40,7 +45,7 @@ test("should setup remove expense action object", () => {
 })
 
 test('should remove expenses from the db and call removeExpese({id})', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   const id = expenses[0].id;
   store.dispatch(startRemoveExpenses({ id }))
     .then(() => {
@@ -50,7 +55,7 @@ test('should remove expenses from the db and call removeExpese({id})', (done) =>
         type: 'REMOVE_EXPENSE',
         id
       })
-      return db.ref(`expenses/${id}`).once('value')
+      return db.ref(`users/${userId}/expenses/${id}`).once('value')
     })
     .then(snapshot => {
       expect(snapshot.val()).toBeFalsy()
@@ -80,7 +85,7 @@ test('should update data in DB and dispatch editExpense(id,update)', (done) => {
     description: 'this is the update',
     amount: 1212
   }
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   store.dispatch(startEditExpense(id, updateObj)).then(() => {
     const action = store.getActions()[0];
     expect(action).toEqual({
@@ -88,7 +93,7 @@ test('should update data in DB and dispatch editExpense(id,update)', (done) => {
       id,
       updates: updateObj
     })
-    return db.ref(`expenses/${id}`).once('value')
+    return db.ref(`users/${userId}/expenses/${id}`).once('value')
   })
     .then(snapshot => {
       expect(snapshot.val()).toEqual(updateObj)
@@ -115,7 +120,7 @@ test("should setup action object with custom values", () => {
 })
 
 test("should add an expense in the DB and and add it to the mock store", (done) => {
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   const expenseData = {
     description: "barca",
     note: "It's cool",
@@ -132,7 +137,7 @@ test("should add an expense in the DB and and add it to the mock store", (done) 
           ...expenseData
         }
       })
-      return db.ref(`expenses/${actions[0].expense.id}`).once('value')
+      return db.ref(`users/${userId}/expenses/${actions[0].expense.id}`).once('value')
     })
     .then(snapshot => {
       const expense = snapshot.val()
@@ -143,7 +148,7 @@ test("should add an expense in the DB and and add it to the mock store", (done) 
 
 test('should dispatch startAddExpense and and save the data in the DB, with default values', (done) => {
   const expense = {};
-  const store = createMockStore({})
+  const store = createMockStore(defaultAuthState)
   const expectedExpense = {
     type: 'ADD_EXPENSE',
     expense: {
@@ -160,7 +165,7 @@ test('should dispatch startAddExpense and and save the data in the DB, with defa
       const actions = store.getActions()
       const action = actions[0];
       expect(action).toEqual(expectedExpense)
-      return db.ref(`expenses/${action.expense.id}`).once('value')
+      return db.ref(`users/${userId}/expenses/${action.expense.id}`).once('value')
     })
     .then(snapshot => {
       const expenseInDB = snapshot.val()
@@ -183,7 +188,7 @@ test('should setup setExpenses action ', () => {
 })
 
 test('should setExpenses in the store fetching from the DB', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   store.dispatch(startFetchExpenses())
     .then(() => {
       const action = store.getActions()[0];
