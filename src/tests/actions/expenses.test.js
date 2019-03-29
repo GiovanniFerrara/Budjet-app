@@ -199,7 +199,7 @@ test('should setExpenses in the store fetching from the DB', (done) => {
       const actionType = action.type;
       expect(actionType).toBe('FETCH_EXPENSES');
       expect(expensesFromActionObj).toEqual(expenses);
-      db.ref('expenses').once('value')
+      db.ref(`users/${userId}/expenses`).once('value')
         .then((snapshot) => {
           const expensesDocs = snapshot.val()
           expect(mapExpensesToArray(expensesDocs)).toEqual(expenses)
