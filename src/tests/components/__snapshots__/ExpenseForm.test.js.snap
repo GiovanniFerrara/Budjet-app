@@ -3,10 +3,12 @@
 exports[`ExpenseForm should change the state on input change 1`] = `
 <div>
   <form
+    className="form"
     onSubmit={[Function]}
   >
     <input
       autoFocus={true}
+      className="text-input"
       name="description"
       noValidate={true}
       onChange={[Function]}
@@ -87,6 +89,7 @@ exports[`ExpenseForm should change the state on input change 1`] = `
       withPortal={false}
     />
     <input
+      className="text-input"
       name="amount"
       onChange={[Function]}
       placeholder="Amount"
@@ -94,13 +97,16 @@ exports[`ExpenseForm should change the state on input change 1`] = `
       value={0}
     />
     <textarea
+      className="textarea"
       name="note"
       onChange={[Function]}
       placeholder="Notes"
       type="text"
       value=""
     />
-    <button>
+    <button
+      className="button"
+    >
        Add Expense 
     </button>
   </form>
@@ -110,10 +116,12 @@ exports[`ExpenseForm should change the state on input change 1`] = `
 exports[`ExpenseForm with data should render correcly the snapshop 1`] = `
 <div>
   <form
+    className="form"
     onSubmit={[Function]}
   >
     <input
       autoFocus={true}
+      className="text-input"
       name="description"
       noValidate={true}
       onChange={[Function]}
@@ -194,6 +202,7 @@ exports[`ExpenseForm with data should render correcly the snapshop 1`] = `
       withPortal={false}
     />
     <input
+      className="text-input"
       name="amount"
       onChange={[Function]}
       placeholder="Amount"
@@ -201,13 +210,16 @@ exports[`ExpenseForm with data should render correcly the snapshop 1`] = `
       value="1.95"
     />
     <textarea
+      className="textarea"
       name="note"
       onChange={[Function]}
       placeholder="Notes"
       type="text"
       value="bla ble bli"
     />
-    <button>
+    <button
+      className="button"
+    >
        Add Expense 
     </button>
   </form>
@@ -217,10 +229,12 @@ exports[`ExpenseForm with data should render correcly the snapshop 1`] = `
 exports[`ExpenseForm without data should render correcly the snapshop 1`] = `
 <div>
   <form
+    className="form"
     onSubmit={[Function]}
   >
     <input
       autoFocus={true}
+      className="text-input"
       name="description"
       noValidate={true}
       onChange={[Function]}
@@ -301,6 +315,7 @@ exports[`ExpenseForm without data should render correcly the snapshop 1`] = `
       withPortal={false}
     />
     <input
+      className="text-input"
       name="amount"
       onChange={[Function]}
       placeholder="Amount"
@@ -308,13 +323,16 @@ exports[`ExpenseForm without data should render correcly the snapshop 1`] = `
       value={0}
     />
     <textarea
+      className="textarea"
       name="note"
       onChange={[Function]}
       placeholder="Notes"
       type="text"
       value=""
     />
-    <button>
+    <button
+      className="button"
+    >
        Add Expense 
     </button>
   </form>
@@ -324,10 +342,12 @@ exports[`ExpenseForm without data should render correcly the snapshop 1`] = `
 exports[`should submit form with the correct data 1`] = `
 <div>
   <form
+    className="form"
     onSubmit={[Function]}
   >
     <input
       autoFocus={true}
+      className="text-input"
       name="description"
       noValidate={true}
       onChange={[Function]}
@@ -408,6 +428,7 @@ exports[`should submit form with the correct data 1`] = `
       withPortal={false}
     />
     <input
+      className="text-input"
       name="amount"
       onChange={[Function]}
       placeholder="Amount"
@@ -415,13 +436,16 @@ exports[`should submit form with the correct data 1`] = `
       value="1.95"
     />
     <textarea
+      className="textarea"
       name="note"
       onChange={[Function]}
       placeholder="Notes"
       type="text"
       value="bla ble bli"
     />
-    <button>
+    <button
+      className="button"
+    >
        Add Expense 
     </button>
   </form>

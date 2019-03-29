@@ -17,18 +17,22 @@ export class EditExpensePage extends Component {
   render() {
     return (
       <div>
-        This is from my edit expense component
-    <ExpenseForm
-          onSubmit={this.onSubmit}
-          expense={this.props.expense}
-        />
-        <button onClick={this.onClickRemove}>
-          Remove
-         </button>
-      </div >
-    )
+        <div className="page-header">
+          <div className="content-container">
+            <h1 className="page-header__title">Edit Expense</h1>
+          </div>
+        </div>
+        <div className="content-container">
+          <ExpenseForm
+            expense={this.props.expense}
+            onSubmit={this.onSubmit}
+          />
+          <button className="button button--secondary" onClick={this.onClickRemove}>Remove Expense</button>
+        </div>
+      </div>
+    );
   }
-}
+};
 
 const mapStateToProps = (state, props) => {
   const idFromUrl = props.match.params.id;
